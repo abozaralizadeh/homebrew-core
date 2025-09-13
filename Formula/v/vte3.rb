@@ -1,8 +1,8 @@
 class Vte3 < Formula
   desc "Terminal emulator widget used by GNOME terminal"
   homepage "https://wiki.gnome.org/Apps/Terminal/VTE"
-  url "https://download.gnome.org/sources/vte/0.80/vte-0.80.3.tar.xz"
-  sha256 "2e596fd3fbeabb71531662224e71f6a2c37f684426136d62854627276ef4f699"
+  url "https://download.gnome.org/sources/vte/0.82/vte-0.82.0.tar.xz"
+  sha256 "b0718db3254730701b43bf5e113cbf8cdb2c14715d32ee1e8a707dc6eb70535f"
   license "LGPL-2.0-or-later"
 
   bottle do
@@ -37,6 +37,7 @@ class Vte3 < Formula
   depends_on macos: :mojave
   depends_on "pango"
   depends_on "pcre2"
+  depends_on "simdutf"
 
   uses_from_macos "python" => :build
 
@@ -125,3 +126,27 @@ index 79d4a702..0495dea8 100644
      include_directories: incs,
      dependencies: libvte_gtk3_deps,
      cpp_args: libvte_gtk3_cppflags,
+diff --git a/src/boxed.hh b/src/boxed.hh
+index 4d4b07b..a526b59 100644
+--- a/src/boxed.hh
++++ b/src/boxed.hh
+@@ -19,6 +19,7 @@
+ // but we need this for non-enum/integral/floating types.
+
+ #include <type_traits>
++#include <utility>
+
+ namespace vte {
+
+diff --git a/src/parser.hh b/src/parser.hh
+index 071e506..27c6d8f 100644
+--- a/src/parser.hh
++++ b/src/parser.hh
+@@ -18,6 +18,7 @@
+
+ #pragma once
+
++#include <algorithm>
+ #include <cstdint>
+ #include <cstdio>
+ #include <optional>
