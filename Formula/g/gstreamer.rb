@@ -2,16 +2,15 @@ class Gstreamer < Formula
   desc "Development framework for multimedia applications"
   homepage "https://gstreamer.freedesktop.org/"
   license all_of: ["LGPL-2.0-or-later", "LGPL-2.1-or-later", "MIT"]
-  revision 5
 
   stable do
-    url "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/archive/1.26.5/gstreamer-1.26.5.tar.bz2"
-    sha256 "7f2c3016cec832170c1a1e6e9ede087282770955894c0cabf4637ee877a69941"
+    url "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/archive/1.26.6/gstreamer-1.26.6.tar.bz2"
+    sha256 "5046c4621ead5b7d762aa5d36fe1eb279dda78c0ce9dc9fae69d10775f2d9fc4"
 
     # When updating this resource, use the tag that matches the GStreamer version.
     resource "rs" do
-      url "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/archive/gstreamer-1.26.5/gst-plugins-rs-gstreamer-1.26.5.tar.bz2"
-      sha256 "19182e58c29a9c777f4d8325253560c6481a0c9d75819e81870c711916740b93"
+      url "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/archive/gstreamer-1.26.6/gst-plugins-rs-gstreamer-1.26.6.tar.bz2"
+      sha256 "45e47b2200a7e40e356ff63e440c642b3282c563df050c6abd471b07a74da102"
 
       livecheck do
         formula :parent
