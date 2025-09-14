@@ -262,7 +262,7 @@ class Krane < Formula
     ENV["GEM_HOME"] = libexec
 
     resources.each do |r|
-      r.verify_download_integrity(r.fetch)
+      r.fetch
       system "gem", "install", r.cached_download,
              "--no-document", "--install-dir", libexec, "--ignore-dependencies"
     end
@@ -274,6 +274,12 @@ class Krane < Formula
     (libexec/"gems").glob("ejson-*/build").each(&:rmtree)
 
     (bin/"krane").write_env_script libexec/"bin/krane", GEM_HOME: ENV["GEM_HOME"]
+
+    # Remove mkmf.log files to avoid shims references
+    rm Dir["#{libexec}/extensions/*/*/*/mkmf.log"]
+
+    # Remove vendored prebuilt binaries
+    (libexec/"gems").glob("llhttp-ffi-*/ext").each(&:rmtree)
   end
 
   test do
