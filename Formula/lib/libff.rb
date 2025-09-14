@@ -63,7 +63,7 @@ class Libff < Formula
       }
     CPP
 
-    system ENV.cxx, "-std=c++11", "test.cpp", "-I#{include}", "-L#{lib}", "-lff", "-o", "test"
+    system ENV.cxx, "-std=c++17", "test.cpp", "-I#{include}", "-L#{lib}", "-lff", "-o", "test"
     system "./test"
   end
 end
