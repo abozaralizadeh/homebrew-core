@@ -1,10 +1,8 @@
 class LuaLanguageServer < Formula
   desc "Language Server for the Lua language"
   homepage "https://github.com/LuaLS/lua-language-server"
-  # pull from git tag to get submodules
-  url "https://github.com/LuaLS/lua-language-server.git",
-      tag:      "3.14.0",
-      revision: "485835e2a89004e1ffc5feb4484dc798a12af69e"
+  url "https://github.com/LuaLS/lua-language-server/releases/download/3.15.0/lua-language-server-3.15.0-submodules.zip"
+  sha256 "53781a3766d37d49ac3491e666b855f4cb4d43091e5d960d236b805d5f3a7adb"
   license "MIT"
   head "https://github.com/LuaLS/lua-language-server.git", branch: "master"
 
@@ -23,7 +21,8 @@ class LuaLanguageServer < Formula
   depends_on "ninja" => :build
 
   def install
-    ENV.cxx11
+    # Workaround until upstream can update bee.lua submodule
+    inreplace "3rd/bee.lua/3rd/fmt/fmt/color.h", '#include "format.h"', "\\0\n#include <algorithm>"
 
     # disable all tests by build script (fail in build environment)
     inreplace buildpath.glob("**/3rd/bee.lua/test/test.lua"),
