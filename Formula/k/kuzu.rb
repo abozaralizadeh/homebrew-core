@@ -25,31 +25,23 @@ class Kuzu < Formula
     depends_on "llvm" if DevelopmentTools.clang_build_version <= 1400
   end
 
-  on_linux do
-    on_intel do
-      # NOTE: Do not add a runtime dependency on GCC as `kuzu` ships libraries.
-      # If build fails with default GCC or Clang then bottle should be dropped.
-      depends_on "llvm" => :build if DevelopmentTools.gcc_version("gcc") < 12
-
-      fails_with :gcc do
-        version "11"
-        cause "error: unknown type name '__m512h'"
-      end
-    end
-  end
-
   fails_with :clang do
     build 1400
     cause "Requires C++20"
   end
 
   fails_with :gcc do
-    version "10"
-    cause "Requires C++20"
+    on_arm do
+      version "10"
+      cause "Requires C++20"
+    end
+    on_intel do
+      version "11"
+      cause "error: unknown type name '__m512h'"
+    end
   end
 
   def install
-    ENV.llvm_clang if OS.linux? && Hardware::CPU.intel? && DevelopmentTools.gcc_version("gcc") < 12
     if OS.mac? && DevelopmentTools.clang_build_version <= 1400
       ENV.llvm_clang
       # Work around failure mixing newer `llvm` headers with older Xcode's libc++:
