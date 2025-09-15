@@ -126,6 +126,11 @@ class Swift < Formula
       url "https://raw.githubusercontent.com/Homebrew/formula-patches/0080c7317c51d16b17671640c5db665516402d2f/swift/llbuild-sqlite3.patch"
       sha256 "97329a525dabf4a7a13d3e3237965e66ae456887776e0101e82b6ca125a97591"
     end
+
+    # Rename posix_spawn_file_actions_addchdir polyfill to avoid conflict with
+    # POSIX definition. Backport of:
+    # https://github.com/swiftlang/swift-llbuild/commit/9087bdf8c7d4c95402d6d811745ca5ff3e149741
+    patch :DATA
   end
 
   resource "swiftpm" do
@@ -560,3 +565,28 @@ class Swift < Formula
     assert_equal expected_resource_dir, default_resource_dir
   end
 end
+
+__END__
+diff --git a/lib/Basic/Subprocess.cpp b/lib/Basic/Subprocess.cpp
+index 64635134..fb6e36ac 100644
+--- a/lib/Basic/Subprocess.cpp
++++ b/lib/Basic/Subprocess.cpp
+@@ -86,8 +86,8 @@ int pthread_fchdir_np(int fd)
+ #endif
+
+ #if !defined(_WIN32) && defined(HAVE_POSIX_SPAWN)
+-static int posix_spawn_file_actions_addchdir(posix_spawn_file_actions_t * __restrict file_actions,
+-                                             const char * __restrict path) {
++static int posix_spawn_file_actions_addchdir_polyfill(posix_spawn_file_actions_t * __restrict file_actions,
++                                                      const char * __restrict path) {
+ #if HAVE_POSIX_SPAWN_CHDIR
+   return ::posix_spawn_file_actions_addchdir_np(file_actions, path);
+ #else
+@@ -771,7 +771,7 @@ void llbuild::basic::spawnProcess(
+   bool usePosixSpawnChdirFallback = true;
+   const auto workingDir = attr.workingDir.str();
+   if (!workingDir.empty() &&
+-      posix_spawn_file_actions_addchdir(&fileActions, workingDir.c_str()) != ENOSYS) {
++      posix_spawn_file_actions_addchdir_polyfill(&fileActions, workingDir.c_str()) != ENOSYS) {
+     usePosixSpawnChdirFallback = false;
+   }
