@@ -22,6 +22,10 @@ class Staq < Formula
   depends_on "gmp"
 
   def install
+    # Fix to error: no member named 'row' in 'col_vec2_t<T>'
+    # Issue ref: https://github.com/softwareQinc/staq/issues/85
+    inreplace "include/staq/grid_synth/mat_vec_2x2.hpp", "col_ == other.row;", "col_ == other.col_;"
+
     system "cmake", "-S", ".", "-B", "build",
                     "-DINSTALL_SOURCES=ON",
                     "-DFETCHCONTENT_SOURCE_DIR_GOOGLETEST=/dev/null", # skip unused FetchContent
